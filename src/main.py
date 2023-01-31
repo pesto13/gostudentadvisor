@@ -80,7 +80,7 @@ def main():
         s = BeautifulSoup(r.content, 'html.parser')
         #print("dimensione studenti ",sys.getsizeof(soup))
         #print("prima riga")
-        #mioTelegram.invio("inizio ricerca")
+        mioTelegram.invio("prova nuovo repo")
         #print("prima riga")
         s = s.find("div", {"id":IDS[i]}) #file di informatica, potrebbe cambiare nel tempo?
         s = s.contents[0].contents[0].contents[1]  #questo è il tbody
