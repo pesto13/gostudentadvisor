@@ -12,8 +12,6 @@ URLS = ["https://docs.google.com/spreadsheets/d/e/2PACX-1vSxa-l5fqDBv5hOuNQ5q0kW
 IDS = ["6878166",
        "695965261"]
 
-codici = []
-
 emoji = ["💻", "📚"]
 
 #ogni volta devo svuotarla immagino
@@ -40,18 +38,7 @@ def riempiLista(s):
             walink = riga.contents[8].contents[0]['href']
             #print(walink)
             ####
-            codici.append(numero)
             studenti.append(studente.student(materia, anno, lezioni, info, numero, walink))
-            
-            """ print(type(materia))
-            print(type(lezioni))
-            print(type(info))
-            print(type(numero))
-            print(type(walink)) 
-            print("-----------") """
-            
-
-
         
         index +=1
         if index >= limit:
@@ -62,36 +49,35 @@ def leggiVecchiCodici(i):
     with open(f'codici{i}.txt', 'r', encoding="utf-8") as f:
         return f.read()
 
-def scriviCodici(i):
+def scriviCodici(studenti,i):
     with open(f'codici{i}.txt', 'w', encoding="utf-8") as f:
-        for c in codici:
-            f.write(f"{c} ")
+        for c in studenti:
+            f.write(f"{c.numero} ")
 
 def mergeCodici(vecchi, studenti, i):
     for s in studenti:
         if s.numero not in vecchi:
             mioTelegram.inviaMessaggio(s, emoji[i])
+            #print(s.numero)
 
 def main():
-    #print("eccoci")
-
     for i in range(2):
+
+        print("eccoci", i)
         r = requests.get(URLS[i])
         s = BeautifulSoup(r.content, 'html.parser')
-        #print("dimensione studenti ",sys.getsizeof(soup))
-        #print("prima riga")
-        #mioTelegram.invio("prova nuovo repo")
-        #print("prima riga")
         s = s.find("div", {"id":IDS[i]}) #file di informatica, potrebbe cambiare nel tempo?
         s = s.contents[0].contents[0].contents[1]  #questo è il tbody
 
-        vecchiCodici = leggiVecchiCodici(i)
         studenti = riempiLista(s)
         s.decompose()
-        #print(studenti[0])
-        mergeCodici(vecchiCodici, studenti, i)
-        scriviCodici(i)
 
+        vecchiCodici = leggiVecchiCodici(i)
+        if (len(vecchiCodici) > 0):
+            mergeCodici(vecchiCodici, studenti, i)
+        if (len(studenti) > 0):
+            scriviCodici(studenti,i)
+        
 
 if __name__ == "__main__":
     main()
