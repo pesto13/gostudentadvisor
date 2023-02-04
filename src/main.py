@@ -29,15 +29,10 @@ def riempiLista(s):
             #eta = riga.contents[3].string
             anno = riga.contents[4].string
             lezioni = str(riga.contents[5].string)
-            
             #go = riga.contents[6].string
-            
             info = riga.contents[7].get_text()
-            ####
             numero = riga.contents[8].string.split()[1]
             walink = riga.contents[8].contents[0]['href']
-            #print(walink)
-            ####
             studenti.append(studente.student(materia, anno, lezioni, info, numero, walink))
         
         index +=1
@@ -70,6 +65,8 @@ def main():
         s = s.contents[0].contents[0].contents[1]  #questo è il tbody
 
         studenti = riempiLista(s)
+        for l in studenti:
+            print(l)
         s.decompose()
 
         vecchiCodici = leggiVecchiCodici(i)
