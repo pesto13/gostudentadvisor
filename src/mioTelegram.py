@@ -88,4 +88,4 @@ def invio(messaggio):
 
 
 #TODO questo non mi lascia lanciare il main, fare in parallelo?
-bot.infinity_polling()
+#bot.infinity_polling()
