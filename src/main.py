@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 import studente
 import mioTelegram
 from ischedule import schedule, run_loop
+import time
+import threading
 
 
 URLS = ["https://docs.google.com/spreadsheets/d/e/2PACX-1vSxa-l5fqDBv5hOuNQ5q0kW19YOpPHAMe-kITWnBR567PIBhYkklOzpbjz-td77hY-jBw5_KGyz1fX7/pubhtml?gid=6878166&&range=A1:H&widget=false&chrome=false&headers=false&",
@@ -56,27 +58,39 @@ def mergeCodici(vecchi, studenti, i):
             #print(s.numero)
 
 def main():
-    for i in range(2):
+    while(True):
+        for i in range(2):
+            print("eccoci", i)
+            r = requests.get(URLS[i])
+            s = BeautifulSoup(r.content, 'html.parser')
+            s = s.find("div", {"id":IDS[i]}) #file di informatica, potrebbe cambiare nel tempo?
+            s = s.contents[0].contents[0].contents[1]  #questo è il tbody
 
-        print("eccoci", i)
-        r = requests.get(URLS[i])
-        s = BeautifulSoup(r.content, 'html.parser')
-        s = s.find("div", {"id":IDS[i]}) #file di informatica, potrebbe cambiare nel tempo?
-        s = s.contents[0].contents[0].contents[1]  #questo è il tbody
+            studenti = riempiLista(s)
+            for l in studenti:
+                print(l)
+            s.decompose()
 
-        studenti = riempiLista(s)
-        for l in studenti:
-            print(l)
-        s.decompose()
-
-        vecchiCodici = leggiVecchiCodici(i)
-        if (len(vecchiCodici) > 0):
-            mergeCodici(vecchiCodici, studenti, i)
-        if (len(studenti) > 0):
-            scriviCodici(studenti,i)
+            vecchiCodici = leggiVecchiCodici(i)
+            if (len(vecchiCodici) > 0):
+                mergeCodici(vecchiCodici, studenti, i)
+            if (len(studenti) > 0):
+                scriviCodici(studenti,i)
         
+        time.sleep(60)
+
+    
 
 if __name__ == "__main__":
-    main()
+    """main()
     schedule(main, interval=1*60)
-    run_loop()
+    run_loop()"""
+
+    threadTelegram = threading.Thread(target=mioTelegram.bot.infinity_polling)
+    threadScraping = threading.Thread(target=main)
+
+    threadTelegram.start()
+    threadScraping.start()
+    
+        
+        
