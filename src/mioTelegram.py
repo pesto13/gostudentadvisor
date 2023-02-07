@@ -50,6 +50,25 @@ def setup(m):
         bot.send_message(cid, "sei già registrato!")
 
 
+@bot.callback_query_handler(func=lambda c:True)
+def menu(c):
+    print("eccomi")
+    if c.data == 'whatever':
+        qm = quick_markup({
+                'hah': {'url': 'https://twitter.com'},
+                'cambia': {'callback_data': 'hihi'}
+            })
+        
+        bot.edit_message_reply_markup(chat_id=c.message.chat.id, message_id=c.message.message_id, reply_markup=qm)
+    elif c.data == 'hihi':
+        qm = quick_markup({
+                'Twitter': {'url': 'https://twitter.com'},
+                'Facebook': {'url': 'https://facebook.com'},
+                'Back': {'callback_data': 'whatever'}
+            })
+        bot.edit_message_reply_markup(chat_id=c.message.chat.id, message_id=c.message.message_id, reply_markup=qm)
+
+
 @bot.message_handler(commands=['kb'])
 def kb(m):
     cid = m.chat.id
