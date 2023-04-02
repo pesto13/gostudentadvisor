@@ -3,7 +3,6 @@ import requests
 from bs4 import BeautifulSoup
 import studente
 import mioTelegram
-from ischedule import schedule, run_loop
 import time
 import threading
 
@@ -60,19 +59,20 @@ def mergeCodici(vecchi, studenti, i):
 def main():
     while(True):
         for i in range(2):
-            print("eccoci", i)
+            print("main", i)
             r = requests.get(URLS[i])
             s = BeautifulSoup(r.content, 'html.parser')
             s = s.find("div", {"id":IDS[i]}) #file di informatica, potrebbe cambiare nel tempo?
             s = s.contents[0].contents[0].contents[1]  #questo è il tbody
 
             studenti = riempiLista(s)
-            for l in studenti:
-                print(l)
+            """ for l in studenti:
+                print(l) """
             s.decompose()
 
             vecchiCodici = leggiVecchiCodici(i)
-            if (len(vecchiCodici) > 0):
+            # questo controllo non permette lo "sparare" di tante notifiche, quindi funziona solo se non è il primo avvio
+            if (""" len(vecchiCodici) > 0 """):
                 mergeCodici(vecchiCodici, studenti, i)
             if (len(studenti) > 0):
                 scriviCodici(studenti,i)

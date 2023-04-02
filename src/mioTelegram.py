@@ -42,6 +42,7 @@ bot = telebot.TeleBot(os.getenv('TOKEN'))
 @bot.message_handler(commands=['setup'])
 def setup(m):
     cid = m.chat.id
+    print(cid)
     print("eccomi")
     if(cid not in [c.id for c in contatti]):
         bot.send_message(cid, "ti sei registrato!")
@@ -49,7 +50,7 @@ def setup(m):
     else:
         bot.send_message(cid, "sei già registrato!")
 
-
+""" 
 @bot.callback_query_handler(func=lambda c:True)
 def menu(c):
     print("eccomi")
@@ -81,13 +82,14 @@ def kb(m):
     bot.send_message(cid, "suvvia", reply_markup=qm)
 
 
-
+ """
 
 def inviaMessaggio(studente, emoji):
+    print("stampoooo")
     text = ""
     text += f"<b>{emoji} {studente.materia} {emoji}</b>"
     text += "\n"
-    text += "• "+studente.anno
+    text += "• "+studente.anno if studente.anno != None else "non specificato"
     text += "\n"
     text += "• "+studente.info
     text += "\n"
@@ -104,7 +106,5 @@ def invio(messaggio):
 
 
 
-
-
 #TODO questo non mi lascia lanciare il main, fare in parallelo?
-#bot.infinity_polling()
+# bot.infinity_polling()
